@@ -1,27 +1,22 @@
 function solution(priorities, location) {
-  const prioritiesIndex = priorities.map((priority, index) => ({
-    index,
+  const queue = priorities.map((priority, index) => ({
+    // 타겟인지 map을 할 때 미리 계산
+    isTarget: location === index,
     priority,
   }));
 
   let cnt = 0;
-  let maxPriority = Math.max(
-    ...prioritiesIndex.map(({ priority }) => priority)
-  );
-  while (prioritiesIndex.length !== 0) {
-    const curr = prioritiesIndex.shift();
-    const { priority, index } = curr;
-    if (priority === maxPriority) {
-      if (index === location) return cnt + 1;
 
-      cnt += 1;
-      maxPriority = Math.max(
-        ...prioritiesIndex.map(({ priority }) => priority)
-      );
+  while (queue.length !== 0) {
+    const curr = queue.shift();
+
+    if (queue.some(({ priority }) => priority > curr.priority)) {
+      queue.push(curr);
     } else {
-      prioritiesIndex.push(curr);
+      cnt += 1;
+      if (curr.isTarget) return cnt;
     }
   }
-
-  return cnt;
 }
+
+console.log(solution([1, 1, 1, 1, 1, 1], 5));
