@@ -6,16 +6,23 @@ const input =
 const N = +input[0].split(" ")[0];
 const S = +input[0].split(" ")[1];
 const arr = input[1].split(" ").map((char) => +char);
-
 let cnt = 0;
-const recursive = (index, sum) => {
-  if (index === N) return;
-  if (sum + arr[index] === S) cnt += 1;
 
-  recursive(index + 1, sum);
-  recursive(index + 1, sum + arr[index]);
+const recursive = (i, acc) => {
+  if (N === i) return;
+
+  // TODO acc + arr[i] 해야 하는 이유 확실히 이해하기
+  if (S === acc + arr[i]) {
+    cnt++;
+    // NOTE 끝까지 봐야 하므로 return 하면 안됨
+    // 1 -1 1 -1 1 -1의 경우
+  }
+
+  // 선택한 경우 축적해서 보내고
+  recursive(i + 1, acc + arr[i]);
+  // 선택하지 않은 경우 그냥 보냄
+  recursive(i + 1, acc);
 };
 
 recursive(0, 0);
-
 console.log(cnt);
