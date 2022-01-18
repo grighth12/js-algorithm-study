@@ -7,34 +7,32 @@ let input =
 
 input = input.split("\n").slice(1);
 
-let ops = [];
-const combinations = (n, acc) => {
-  if (acc.length === n) {
-    ops.push(acc);
-    return;
-  }
-
-  combinations(n, [...acc, " "]);
-  combinations(n, [...acc, "+"]);
-  combinations(n, [...acc, "-"]);
-};
-
 let answer = "";
 
 for (let i = 0; i < input.length; i++) {
-  ops = [];
-  combinations(input[i] - 1, []);
-
-  const arr = Array.from({ length: input[i] }, (_, index) => `${index + 1}`);
-  for (let j = 0; j < ops.length; j++) {
-    const m = arr.map((item, k) =>
-      k !== arr.length - 1 ? item + ops[j][k] : item
-    );
-
-    if (eval(m.join("").replace(/(\s*)/g, "")) === 0) {
-      answer += `${m.join("")}\n`;
+  let res = [[1]];
+  for (let j = 2; j <= input[i]; j++) {
+    const len = res.length;
+    for (let k = 0; k < len; k++) {
+      res = [
+        ...res,
+        [...res[k], " ", j],
+        [...res[k], "+", j],
+        [...res[k], "-", j],
+      ];
     }
   }
+
+  const tmp = res
+    .filter((r) => r.length === input[i] * 2 - 1)
+    .map((r) => r.join(""));
+
+  for (let j = 0; j < tmp.length; j++) {
+    if (eval(tmp[j].replace(/(\s*)/g, "")) === 0) {
+      answer += `${tmp[j]}\n`;
+    }
+  }
+
   answer += "\n";
 }
 
